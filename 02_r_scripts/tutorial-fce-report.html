@@ -87,7 +87,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure"><span class="header-section-number">1.1.1</span> Folder structure</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages"><span class="header-section-number">1.1.2</span> R-Packages</a></li>
   </ul></li>
-  <li><a href="#getting-the-data" id="toc-getting-the-data" class="nav-link" data-scroll-target="#getting-the-data"><span class="header-section-number">1.2</span> Getting the data</a></li>
+  </ul></li>
+  <li><a href="#getting-to-know-the-data" id="toc-getting-to-know-the-data" class="nav-link" data-scroll-target="#getting-to-know-the-data"><span class="header-section-number">2</span> Getting to know the data</a>
+  <ul class="collapse">
+  <li><a href="#accessing-and-downloading-the-data" id="toc-accessing-and-downloading-the-data" class="nav-link" data-scroll-target="#accessing-and-downloading-the-data"><span class="header-section-number">2.1</span> Accessing and downloading the data</a></li>
+  <li><a href="#importing-data-into-r" id="toc-importing-data-into-r" class="nav-link" data-scroll-target="#importing-data-into-r"><span class="header-section-number">2.2</span> Importing data into R</a>
+  <ul class="collapse">
+  <li><a href="#main-table" id="toc-main-table" class="nav-link" data-scroll-target="#main-table"><span class="header-section-number">2.2.1</span> Main table</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -181,13 +188,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales) <span class="co"># For number formats</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr) <span class="co"># For neat tables</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co"># for arranging multiple plots</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable) <span class="co"># for creating fancy tables. More info here: https://davidgohel.github.io/flextable/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable) <span class="co"># for creating fancy tables. More info here: https://davidgohel.github.io/flextable/</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyselect) <span class="co"># implements a specialised sublanguage of R for selecting variables from data frames and other data structures</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="getting-the-data" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="getting-the-data"><span class="header-section-number">1.2</span> Getting the data</h2>
-<p>The data used in this tutorial is sourced from a KoboToolbox<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> project created to collect fish catch and effort data in Barbados, specifically the <strong>“[DRAFT] Barbados Routine Fisheries Field Data Collection Form”</strong>. To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the <strong>“DATA”</strong> tab at the top.</p>
+</section>
+<section id="getting-to-know-the-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Getting to know the data</h1>
+<section id="accessing-and-downloading-the-data" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="accessing-and-downloading-the-data"><span class="header-section-number">2.1</span> Accessing and downloading the data</h2>
+<p>The data used in this tutorial is sourced from a KoboToolbox<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> project created to collect fish catch and effort data in Barbados, specifically the <strong>“[DRAFT] Barbados Routine Fisheries Field Data Collection Form”</strong>. There are multiple methods of accessing data from KoboToolbox servers, however, we will be using the XLS download method in this tutorial.</p>
+<p>To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the <strong>“DATA”</strong> tab at the top.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/Screenshot%20KoboToolbox-data.png" class="img-fluid figure-img"></p>
@@ -201,6 +213,131 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption class="figure-caption"><em>KoboToolbox downloads side-tab</em></figcaption>
 </figure>
 </div>
+<p>KoboToolbox generates an Excel (XLS) file. Click the <strong>“Download”</strong> button to get your file.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Screenshot%20KoboToolbox-downloads-02.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption"><em>KoboToolbox downloads XLS file with labels</em></figcaption>
+</figure>
+</div>
+</section>
+<section id="importing-data-into-r" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="importing-data-into-r"><span class="header-section-number">2.2</span> Importing data into R</h2>
+<p>The data from the KoboToolbox server is stored in an Excel Workbook which has multiple sheets. Reminiscent of a database, the sheets are linked using a key variable, named the UUID. One sheet acts as the main table and is linked to several sub-tables in a one-to-one or one-to-many relationship.</p>
+<section id="main-table" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="main-table"><span class="header-section-number">2.2.1</span> Main table</h3>
+<p>The <strong>readxl()</strong> package will be used to import the data into R. We begin with the main table, called <strong>main_table</strong> in this tutorial.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>main_table <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"_DRAFT_ Barbados Routine Fis..."</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Exclude unneeded variables</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"^intro_|^note|^username|deviceid|submitted_by"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make some minor edits to data in all variables: This "--" is converted to NA</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The resulting <strong>main_table</strong> variables are:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "start"                                
+ [2] "end"                                  
+ [3] "today"                                
+ [4] "collection_date"                      
+ [5] "collection_port"                      
+ [6] "collection_fishing_today_yn"          
+ [7] "collection_no_fishing_reasons"        
+ [8] "collection_no_fishing_reasons_specify"
+ [9] "collection_activities"                
+[10] "collection_agent"                     
+[11] "collection_agent_001"                 
+[12] "pull_vessel_id"                       
+[13] "pull_vessel_id_specify"               
+[14] "trip_motorized_yn"                    
+[15] "trip_depart"                          
+[16] "trip_return"                          
+[17] "pull_reg_no"                          
+[18] "pull_vessel_name"                     
+[19] "pull_hull_no"                         
+[20] "pull_vessel_class"                    
+[21] "pull_vessel_type"                     
+[22] "pull_primary_landing_site"            
+[23] "pull_hull_material"                   
+[24] "pull_length"                          
+[25] "pull_beam"                            
+[26] "pull_depth"                           
+[27] "pull_draught"                         
+[28] "pull_eng_details"                     
+[29] "pull_owner_details"                   
+[30] "pull_vessel_admins"                   
+[31] "pull_vessel_agents"                   
+[32] "pull_vessel_directors"                
+[33] "pull_vessel_master"                   
+[34] "pull_vessel_crew"                     
+[35] "pull_unspecified_roles"               
+[36] "pull_vessel_info_corrections"         
+[37] "reg_no"                               
+[38] "vessel_name"                          
+[39] "hull_number"                          
+[40] "vessel_class"                         
+[41] "vessel_type"                          
+[42] "vessel_type_specify"                  
+[43] "operating_site_primary"               
+[44] "operating_site_secondary"             
+[45] "mooring_site"                         
+[46] "hull_material"                        
+[47] "hull_material_specify"                
+[48] "dim_units"                            
+[49] "input_inches_for_conversion"          
+[50] "calc_decimal_ft"                      
+[51] "dim_length"                           
+[52] "dim_beam"                             
+[53] "dim_depth_keel"                       
+[54] "dim_depth_overall"                    
+[55] "dim_draught"                          
+[56] "next_species_yn"                      
+[57] "next_expenses_yn"                     
+[58] "fuel_ec"                              
+[59] "fuel_gallons"                         
+[60] "oil_ec"                               
+[61] "oil_gallons"                          
+[62] "ice_ec"                               
+[63] "ice_type"                             
+[64] "ice_type_specify"                     
+[65] "bait_ec"                              
+[66] "food_ec"                              
+[67] "other_ec"                             
+[68] "other_label"                          
+[69] "calc_fuel"                            
+[70] "calc_oil"                             
+[71] "calc_ice"                             
+[72] "calc_bait"                            
+[73] "calc_food"                            
+[74] "calc_other"                           
+[75] "calc_expenses"                        
+[76] "total_expenses_are_calc_expenses"     
+[77] "boat_crew_qty"                        
+[78] "calc_total_fish_val"                  
+[79] "calc_profit"                          
+[80] "sea_state"                            
+[81] "sea_colour"                           
+[82] "comments"                             
+[83] "team_yn"                              
+[84] "collection_agent_002"                 
+[85] "agent_signature"                      
+[86] "agent_signature_url"                  
+[87] "id"                                   
+[88] "uuid"                                 
+[89] "submission_time"                      
+[90] "validation_status"                    
+[91] "status"                               
+[92] "version"                              
+[93] "tags"                                 
+[94] "index"                                </code></pre>
+</div>
+</div>
+</section>
 </section>
 </section>
 

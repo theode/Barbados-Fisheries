@@ -17,7 +17,9 @@ This tutorial intends to walk you through coding the retrieval, cleaning and man
 #| label: to-do
 #| include: false
 
-# 1. 
+# 1. change "_ec" for variables in main_data to "_bbd" to reflect the Barbadian currency
+# 2. Add in reference files for questionnaire and loo-up lists
+# 3. Figure out what is going on with collection_agent, collection_agent_001 and collection_agent_002
 ```
 
 ```{r}
@@ -72,11 +74,16 @@ library(scales) # For number formats
 library(knitr) # For neat tables
 library(patchwork) # for arranging multiple plots
 library(flextable) # for creating fancy tables. More info here: https://davidgohel.github.io/flextable/
+library(tidyselect) # implements a specialised sublanguage of R for selecting variables from data frames and other data structures
 ```
 
-## Getting the data
+# Getting to know the data
 
-The data used in this tutorial is sourced from a KoboToolbox[^2] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"DATA"** tab at the top.
+## Accessing and downloading the data
+
+The data used in this tutorial is sourced from a KoboToolbox[^2] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. There are multiple methods of accessing data from KoboToolbox servers, however, we will be using the XLS download method in this tutorial. 
+
+To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"DATA"** tab at the top.
 
 [^2]: <https://www.kobotoolbox.org/>
 
@@ -85,4 +92,40 @@ The data used in this tutorial is sourced from a KoboToolbox[^2] project created
 On the left side, select "Downloads". Pay attention to the settings shown and ensure that you have the same. Then when you are done, select **"EXPORT"**.
 
 ![*KoboToolbox downloads side-tab*](images/Screenshot%20KoboToolbox-downloads.png){fig-align="center"}
+
+KoboToolbox generates an Excel (XLS) file. Click the **"Download"** button to get your file.
+
+![*KoboToolbox downloads XLS file with labels*](images/Screenshot%20KoboToolbox-downloads-02.png){fig-align="center"}
+
+## Importing data into R
+The data from the KoboToolbox server is stored in an Excel Workbook which has multiple sheets. Reminiscent of a database, the sheets are linked using a key variable, named the UUID. One sheet acts as the main table and is linked to several sub-tables in a one-to-one or one-to-many relationship.
+
+### Main table
+
+The **readxl()** package will be used to import the data into R. We begin with the main table, called **main_table** in this tutorial.
+
+```{r}
+#| label: import-data
+
+main_table <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"),
+                       # Select which sheet to access and load
+                       sheet = "_DRAFT_ Barbados Routine Fis...") |>
+  # Clean and standardize the variable names so they are R-friendly
+  clean_names() |>
+  # Exclude unneeded variables
+  select(!matches("^intro_|^note|^username|deviceid|submitted_by")) |>
+  # Make some minor edits to data in all variables: This "--" is converted to NA
+  mutate(across(everything(), ~gsub("\\--", NA, .)))
+```
+
+The resulting **main_table** variables are:
+
+```{r}
+#| label: vars-main-table
+#| echo: false
+
+names(main_table)
+
+# str(main_table)
+```
 
