@@ -1,0 +1,77 @@
+---
+title: "Tutorial: Fish Catch and Effort Analysis and Reporting Using R"
+author: "Derrick Theophille"
+
+format: 
+  html:
+    toc: true
+    number-sections: true
+    fig_caption: true
+---
+
+# Introduction
+
+This tutorial intends to walk you through coding the retrieval, cleaning and manipulation, analysis and reporting of fish catch and effort data using R and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.
+
+
+```{r}
+#| label: to-do
+#| include: false
+
+# 1. 
+```
+
+```{r}
+#| label: log
+#| include: false
+
+# 20231221: Created script, added text on introduction, added raw data
+
+```
+
+## Set-up
+
+### Folder structure
+
+This tutorial assumes that you use projects within RStudio. Added to that, it uses the following folder structure (automatically generated using the **"r4np"** package[^1]):
+
+```{r}
+#| label: file-directory-structure
+#| echo: false
+
+
+d01 <- data.frame(folder_name = list.dirs(path = "..", full.names = FALSE, recursive = FALSE),
+                  explanation = c("Github file",
+                                  "R-project user file",
+                                  "All raw data files are stored here",
+                                  "Tidy, cleaned or processed data from our code are stored here",
+                                  "Scripts and other files with executable code",
+                                  "Output plots",
+                                  "Output reports in various formats",
+                                  "Miscellaneous files"))
+
+knitr::kable(d01[3:8,], row.names = FALSE,
+             caption = "*Folder structure used in this tutorial*")
+```
+
+
+[^1]: A tutorial on project set-up and r4np is found here: <https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html>
+
+### R-Packages
+
+The following packages are loaded and used for this tutorial:
+
+```{r}
+#| label: libraries
+#| output: false
+
+library(tidyverse) # For plots, reshaping data and summaries. Takes the place of ggplot2, dplyr,  tidyr, stringr, lubridate, readr, and others
+library(readxl) # For reading MS Excel files
+library(writexl) # For writing MS Excel files
+library(here) # Used for finding files within your project. See more information at https://github.com/jennybc/here_here/blob/master/README.md and https://www.tidyverse.org/articles/2017/12/workflow-vs-script
+library(janitor) # For some data exploration, cleaning and other useful functionality
+library(scales) # For number formats
+library(knitr) # For neat tables
+library(patchwork) # for arranging multiple plots
+library(flextable) # for creating fancy tables. More info here: https://davidgohel.github.io/flextable/
+```
