@@ -87,6 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure"><span class="header-section-number">1.1.1</span> Folder structure</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages"><span class="header-section-number">1.1.2</span> R-Packages</a></li>
   </ul></li>
+  <li><a href="#getting-the-data" id="toc-getting-the-data" class="nav-link" data-scroll-target="#getting-the-data"><span class="header-section-number">1.2</span> Getting the data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -175,14 +176,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># For plots, reshaping data and summaries. Takes the place of ggplot2, dplyr,  tidyr, stringr, lubridate, readr, and others</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) <span class="co"># For reading MS Excel files</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(writexl) <span class="co"># For writing MS Excel files</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co"># Used for finding files within your project. See more information at &lt;https://github.com/jennybc/here_here/blob/master/README.md&gt; and &lt;https://www.tidyverse.org/articles/2017/12/workflow-vs-script&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co"># Used for finding files within your project. See more information at https://github.com/jennybc/here_here/blob/master/README.md and https://www.tidyverse.org/articles/2017/12/workflow-vs-script</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># For some data exploration, cleaning and other useful functionality</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales) <span class="co"># For number formats</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr) <span class="co"># For neat tables</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co"># for arranging multiple plots</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable) <span class="co"># for creating fancy tables. More info here: &lt;https://davidgohel.github.io/flextable/&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable) <span class="co"># for creating fancy tables. More info here: https://davidgohel.github.io/flextable/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+</section>
+<section id="getting-the-data" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="getting-the-data"><span class="header-section-number">1.2</span> Getting the data</h2>
+<p>The data used in this tutorial is sourced from a KoboToolbox<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> project created to collect fish catch and effort data in Barbados, specifically the <strong>“[DRAFT] Barbados Routine Fisheries Field Data Collection Form”</strong>. To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the <strong>“Data”</strong> tab at the top.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Screenshot%20KoboToolbox-data.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption"><em>KoboToolbox data tab</em></figcaption>
+</figure>
+</div>
 </section>
 </section>
 
@@ -191,6 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <ol>
 <li id="fn1"><p>A tutorial on project set-up and r4np is found here: <a href="https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html" class="uri">https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.kobotoolbox.org/" class="uri">https://www.kobotoolbox.org/</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

@@ -13,7 +13,6 @@ format:
 
 This tutorial intends to walk you through coding the retrieval, cleaning and manipulation, analysis and reporting of fish catch and effort data using R and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.
 
-
 ```{r}
 #| label: to-do
 #| include: false
@@ -35,6 +34,8 @@ This tutorial intends to walk you through coding the retrieval, cleaning and man
 
 This tutorial assumes that you use projects within RStudio. Added to that, it uses the following folder structure (automatically generated using the **"r4np"** package[^1]):
 
+[^1]: A tutorial on project set-up and r4np is found here: <https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html>
+
 ```{r}
 #| label: file-directory-structure
 #| echo: false
@@ -54,9 +55,6 @@ knitr::kable(d01[3:8,], row.names = FALSE,
              caption = "*Folder structure used in this tutorial*")
 ```
 
-
-[^1]: A tutorial on project set-up and r4np is found here: <https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html>
-
 ### R-Packages
 
 The following packages are loaded and used for this tutorial:
@@ -75,3 +73,11 @@ library(knitr) # For neat tables
 library(patchwork) # for arranging multiple plots
 library(flextable) # for creating fancy tables. More info here: https://davidgohel.github.io/flextable/
 ```
+
+## Getting the data
+
+The data used in this tutorial is sourced from a KoboToolbox[^2] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"Data"** tab at the top.
+
+[^2]: <https://www.kobotoolbox.org/>
+
+![*KoboToolbox data tab*](images/Screenshot KoboToolbox-data.png){fig-align="center"}
