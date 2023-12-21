@@ -76,8 +76,13 @@ library(flextable) # for creating fancy tables. More info here: https://davidgoh
 
 ## Getting the data
 
-The data used in this tutorial is sourced from a KoboToolbox[^2] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"Data"** tab at the top.
+The data used in this tutorial is sourced from a KoboToolbox[^2] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"DATA"** tab at the top.
 
 [^2]: <https://www.kobotoolbox.org/>
 
-![*KoboToolbox data tab*](images/Screenshot KoboToolbox-data.png){fig-align="center"}
+![*KoboToolbox data tab*](images/Screenshot%20KoboToolbox-data.png){fig-align="center"}
+
+On the left side, select "Downloads". Pay attention to the settings shown and ensure that you have the same. Then when you are done, select **"EXPORT"**.
+
+![*KoboToolbox downloads side-tab*](images/Screenshot%20KoboToolbox-downloads.png){fig-align="center"}
+
