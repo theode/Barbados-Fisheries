@@ -157,6 +157,12 @@ main_table <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routi
 
 The resulting **main_table** variables are:
 
+::: {.callout-tip}
+
+**NA** means that there is no label for the variable. 
+
+:::
+
 ```{r}
 #| label: vars-main-table
 #| echo: false
