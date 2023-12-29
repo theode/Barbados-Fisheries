@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Derrick Theophille">
+<meta name="dcterms.date" content="2023-12-21">
 
 <title>Tutorial: Fish Catch and Effort Analysis and Reporting Using R</title>
 <style>
@@ -93,7 +94,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#accessing-and-downloading-the-data" id="toc-accessing-and-downloading-the-data" class="nav-link" data-scroll-target="#accessing-and-downloading-the-data"><span class="header-section-number">2.1</span> Accessing and downloading the data</a></li>
   <li><a href="#importing-data-into-r" id="toc-importing-data-into-r" class="nav-link" data-scroll-target="#importing-data-into-r"><span class="header-section-number">2.2</span> Importing data into R</a>
   <ul class="collapse">
-  <li><a href="#main-table" id="toc-main-table" class="nav-link" data-scroll-target="#main-table"><span class="header-section-number">2.2.1</span> Main table</a></li>
+  <li><a href="#reference-tables" id="toc-reference-tables" class="nav-link" data-scroll-target="#reference-tables"><span class="header-section-number">2.2.1</span> Reference tables</a></li>
+  <li><a href="#main-table" id="toc-main-table" class="nav-link" data-scroll-target="#main-table"><span class="header-section-number">2.2.2</span> Main table</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -117,6 +119,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 21, 2023</p>
+    </div>
+  </div>
   
     
   </div>
@@ -126,19 +134,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
-<p>This tutorial intends to walk you through coding the retrieval, cleaning and manipulation, analysis and reporting of fish catch and effort data using R and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.</p>
+<p>This tutorial intends to walk you through coding the retrieval, cleaning, manipulation, analysis, and reporting of fish catch and effort data using the R Statistical Software and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.</p>
+<p>Just a few thinks to note as we progress:</p>
+<ul>
+<li>Comments in the code are prefaced with a hash tag <strong>“#”</strong>.</li>
+<li>The text, though handy, is meant to be accompanied by input from the lecturer. Everything may not be explained according to the needs of the student. So questions are encouraged.</li>
+</ul>
 <section id="set-up" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="set-up"><span class="header-section-number">1.1</span> Set-up</h2>
 <section id="folder-structure" class="level3" data-number="1.1.1">
 <h3 data-number="1.1.1" class="anchored" data-anchor-id="folder-structure"><span class="header-section-number">1.1.1</span> Folder structure</h3>
-<p>This tutorial assumes that you use projects within RStudio. Added to that, it uses the following folder structure (automatically generated using the <strong>“r4np”</strong> package<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>):</p>
+<p>This tutorial assumes that you use projects within RStudio. Added to that, it uses the following folder structure (automatically generated using the <strong>“r4np”</strong> package):</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A tutorial on project set-up and r4np is found here (Chapter 6 from 6.1 to 6.2): <a href="https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html" class="uri">https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html</a></p>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption><em>Folder structure used in this tutorial</em></caption>
 <colgroup>
-<col style="width: 17%">
-<col style="width: 82%">
+<col style="width: 29%">
+<col style="width: 70%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -148,27 +174,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">00_raw_data</td>
+<td style="text-align: left;">images</td>
 <td style="text-align: left;">All raw data files are stored here</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">01_tidy_data</td>
+<td style="text-align: left;">tutorial-fce-report_files</td>
 <td style="text-align: left;">Tidy, cleaned or processed data from our code are stored here</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">02_r_scripts</td>
+<td style="text-align: left;">images</td>
 <td style="text-align: left;">Scripts and other files with executable code</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">03_plots</td>
+<td style="text-align: left;">tutorial-fce-report_files</td>
 <td style="text-align: left;">Output plots</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">04_reports</td>
+<td style="text-align: left;">images</td>
 <td style="text-align: left;">Output reports in various formats</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">99_other</td>
+<td style="text-align: left;">tutorial-fce-report_files</td>
 <td style="text-align: left;">Miscellaneous files</td>
 </tr>
 </tbody>
@@ -198,143 +224,468 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="2"><span class="header-section-number">2</span> Getting to know the data</h1>
 <section id="accessing-and-downloading-the-data" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="accessing-and-downloading-the-data"><span class="header-section-number">2.1</span> Accessing and downloading the data</h2>
-<p>The data used in this tutorial is sourced from a KoboToolbox<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> project created to collect fish catch and effort data in Barbados, specifically the <strong>“[DRAFT] Barbados Routine Fisheries Field Data Collection Form”</strong>. There are multiple methods of accessing data from KoboToolbox servers, however, we will be using the XLS download method in this tutorial.</p>
-<p>To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the <strong>“DATA”</strong> tab at the top.</p>
-<div class="quarto-figure quarto-figure-center">
+<p>The data used in this tutorial is sourced from a KoboToolbox<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> project created to collect fish catch and effort data in Barbados, specifically the <strong>“[DRAFT] Barbados Routine Fisheries Field Data Collection Form”</strong>. There are multiple methods of accessing data from KoboToolbox servers, however, we will be using the XLS download method in this tutorial.</p>
+<p>To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the <strong>“DATA”</strong> tab at the top. See <a href="#fig-kobo-data">Figure&nbsp;1</a> below.</p>
+<div id="fig-kobo-data" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="images/Screenshot%20KoboToolbox-data.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption"><em>KoboToolbox data tab</em></figcaption>
+<figcaption class="figure-caption">Figure&nbsp;1: <em>KoboToolbox data tab</em></figcaption>
 </figure>
 </div>
-<p>On the left side, select “Downloads”. Pay attention to the settings shown and ensure that you have the same. Then when you are done, select <strong>“EXPORT”</strong>.</p>
-<div class="quarto-figure quarto-figure-center">
+<p>On the left side (<a href="#fig-kobo-downloads">Figure&nbsp;2</a>), select “Downloads”. Pay attention to the settings highlighted and ensure that you have the same. When you are done, select <strong>“EXPORT”</strong>.</p>
+<div id="fig-kobo-downloads" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="images/Screenshot%20KoboToolbox-downloads.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption"><em>KoboToolbox downloads side-tab</em></figcaption>
+<figcaption class="figure-caption">Figure&nbsp;2: <em>KoboToolbox downloads side-tab</em></figcaption>
 </figure>
 </div>
-<p>KoboToolbox generates an Excel (XLS) file. Click the <strong>“Download”</strong> button to get your file.</p>
-<div class="quarto-figure quarto-figure-center">
+<p>KoboToolbox generates an Excel (XLS) file. Click the <strong>“Download”</strong> button to get your file (<a href="#fig-kobo-xls">Figure&nbsp;3</a>).</p>
+<div id="fig-kobo-xls" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="images/Screenshot%20KoboToolbox-downloads-02.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption"><em>KoboToolbox downloads XLS file with labels</em></figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3: <em>KoboToolbox downloads XLS file with labels</em></figcaption>
 </figure>
 </div>
 </section>
 <section id="importing-data-into-r" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="importing-data-into-r"><span class="header-section-number">2.2</span> Importing data into R</h2>
-<p>The data from the KoboToolbox server is stored in an Excel Workbook which has multiple sheets. Reminiscent of a database, the sheets are linked using a key variable, named the UUID. One sheet acts as the main table and is linked to several sub-tables in a one-to-one or one-to-many relationship.</p>
-<section id="main-table" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="main-table"><span class="header-section-number">2.2.1</span> Main table</h3>
+<p>The data from the KoboToolbox server is stored in an Excel Workbook which has multiple sheets. Reminiscent of a database, the sheets are linked using a key variable, named the UUID. One sheet acts as the main table and is linked to several sub-tables in a one-to-one or one-to-many relationship. These are the collected data. But, before we begin looking at the actual data collected, we will import the reference tables.</p>
+<section id="reference-tables" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="reference-tables"><span class="header-section-number">2.2.1</span> Reference tables</h3>
+<p>Reference tables store background information on the collected data. In this exercise, this includes the questionnaire and the look-up lists. The questionnaire gives added context to the variables found in the main and sub tables. The look-up lists help with decoding the choice options for those questions. Both will come in handy as we explore our data.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The reference tables can be downloaded from the KoboToolbox project.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># questionnaire ----</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ref_questionnaire <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"questionnaire"</span>, <span class="st">"aD3ds4EVZTq8SfR9dYGqdJ.xlsx"</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                               <span class="co"># Select the Excel sheet to load</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">sheet =</span> <span class="st">"survey"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We split the "type" variable into two</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> type, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">"look_up"</span>), <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># look-up-lists ----</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>ref_look_ups <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"questionnaire"</span>, <span class="st">"aD3ds4EVZTq8SfR9dYGqdJ.xlsx"</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">sheet =</span> <span class="st">"choices"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="main-table" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="main-table"><span class="header-section-number">2.2.2</span> Main table</h3>
 <p>The <strong>readxl()</strong> package will be used to import the data into R. We begin with the main table, called <strong>main_table</strong> in this tutorial.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>main_table <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"_DRAFT_ Barbados Routine Fis..."</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Exclude unneeded variables</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"^intro_|^note|^username|deviceid|submitted_by"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make some minor edits to data in all variables: This "--" is converted to NA</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>main_table <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"_DRAFT_ Barbados Routine Fis..."</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Exclude unneeded variables</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"^intro_|^note|^username|deviceid|submitted_by"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make some minor edits to data in all variables: This "--" is converted to NA</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The resulting <strong>main_table</strong> variables are:</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "start"                                
- [2] "end"                                  
- [3] "today"                                
- [4] "collection_date"                      
- [5] "collection_port"                      
- [6] "collection_fishing_today_yn"          
- [7] "collection_no_fishing_reasons"        
- [8] "collection_no_fishing_reasons_specify"
- [9] "collection_activities"                
-[10] "collection_agent"                     
-[11] "collection_agent_001"                 
-[12] "pull_vessel_id"                       
-[13] "pull_vessel_id_specify"               
-[14] "trip_motorized_yn"                    
-[15] "trip_depart"                          
-[16] "trip_return"                          
-[17] "pull_reg_no"                          
-[18] "pull_vessel_name"                     
-[19] "pull_hull_no"                         
-[20] "pull_vessel_class"                    
-[21] "pull_vessel_type"                     
-[22] "pull_primary_landing_site"            
-[23] "pull_hull_material"                   
-[24] "pull_length"                          
-[25] "pull_beam"                            
-[26] "pull_depth"                           
-[27] "pull_draught"                         
-[28] "pull_eng_details"                     
-[29] "pull_owner_details"                   
-[30] "pull_vessel_admins"                   
-[31] "pull_vessel_agents"                   
-[32] "pull_vessel_directors"                
-[33] "pull_vessel_master"                   
-[34] "pull_vessel_crew"                     
-[35] "pull_unspecified_roles"               
-[36] "pull_vessel_info_corrections"         
-[37] "reg_no"                               
-[38] "vessel_name"                          
-[39] "hull_number"                          
-[40] "vessel_class"                         
-[41] "vessel_type"                          
-[42] "vessel_type_specify"                  
-[43] "operating_site_primary"               
-[44] "operating_site_secondary"             
-[45] "mooring_site"                         
-[46] "hull_material"                        
-[47] "hull_material_specify"                
-[48] "dim_units"                            
-[49] "input_inches_for_conversion"          
-[50] "calc_decimal_ft"                      
-[51] "dim_length"                           
-[52] "dim_beam"                             
-[53] "dim_depth_keel"                       
-[54] "dim_depth_overall"                    
-[55] "dim_draught"                          
-[56] "next_species_yn"                      
-[57] "next_expenses_yn"                     
-[58] "fuel_ec"                              
-[59] "fuel_gallons"                         
-[60] "oil_ec"                               
-[61] "oil_gallons"                          
-[62] "ice_ec"                               
-[63] "ice_type"                             
-[64] "ice_type_specify"                     
-[65] "bait_ec"                              
-[66] "food_ec"                              
-[67] "other_ec"                             
-[68] "other_label"                          
-[69] "calc_fuel"                            
-[70] "calc_oil"                             
-[71] "calc_ice"                             
-[72] "calc_bait"                            
-[73] "calc_food"                            
-[74] "calc_other"                           
-[75] "calc_expenses"                        
-[76] "total_expenses_are_calc_expenses"     
-[77] "boat_crew_qty"                        
-[78] "calc_total_fish_val"                  
-[79] "calc_profit"                          
-[80] "sea_state"                            
-[81] "sea_colour"                           
-[82] "comments"                             
-[83] "team_yn"                              
-[84] "collection_agent_002"                 
-[85] "agent_signature"                      
-[86] "agent_signature_url"                  
-[87] "id"                                   
-[88] "uuid"                                 
-[89] "submission_time"                      
-[90] "validation_status"                    
-[91] "status"                               
-[92] "version"                              
-[93] "tags"                                 
-[94] "index"                                </code></pre>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 73%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">variable_code</th>
+<th style="text-align: left;">label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">start</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">end</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">today</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">collection_date</td>
+<td style="text-align: left;">1.1. Date of data collection</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">collection_port</td>
+<td style="text-align: left;">1.2. Landing site</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">collection_fishing_today_yn</td>
+<td style="text-align: left;">1.3. Was there any fishing activity on ${collection_date}?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">collection_no_fishing_reasons</td>
+<td style="text-align: left;">Why was there no fishing on ${collection_date}?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">collection_no_fishing_reasons_specify</td>
+<td style="text-align: left;">Specify other reasons</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">collection_activities</td>
+<td style="text-align: left;">1.3. What data are you collecting on ${collection_date}?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">collection_agent</td>
+<td style="text-align: left;">1.4. What is your name?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">collection_agent_001</td>
+<td style="text-align: left;">1.4. What is your name?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_id</td>
+<td style="text-align: left;">2.1.1. Select the boat to be sampled</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_vessel_id_specify</td>
+<td style="text-align: left;">Specify boat</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">trip_motorized_yn</td>
+<td style="text-align: left;">2.1.2. Was the boat <strong>motorized</strong> for this trip?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">trip_depart</td>
+<td style="text-align: left;">2.1.3. Trip <strong>departure</strong> date and time</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">trip_return</td>
+<td style="text-align: left;">2.1.4. Trip <strong>return</strong> date and time</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_reg_no</td>
+<td style="text-align: left;">Vessel registration number</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_name</td>
+<td style="text-align: left;">Vessel name</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_hull_no</td>
+<td style="text-align: left;">Hull number</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_class</td>
+<td style="text-align: left;">Vessel class</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_vessel_type</td>
+<td style="text-align: left;">Vessel type</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_primary_landing_site</td>
+<td style="text-align: left;">Primary operating site</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_hull_material</td>
+<td style="text-align: left;">Hull material</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_length</td>
+<td style="text-align: left;">Length</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_beam</td>
+<td style="text-align: left;">Beam</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_depth</td>
+<td style="text-align: left;">Depth</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_draught</td>
+<td style="text-align: left;">Draught</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_eng_details</td>
+<td style="text-align: left;">Engine details</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_owner_details</td>
+<td style="text-align: left;">Owners</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_admins</td>
+<td style="text-align: left;">Admininstrators</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_vessel_agents</td>
+<td style="text-align: left;">Agents</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_directors</td>
+<td style="text-align: left;">Directors</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_vessel_master</td>
+<td style="text-align: left;">Vessel master</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_crew</td>
+<td style="text-align: left;">Crew</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pull_unspecified_roles</td>
+<td style="text-align: left;">Unspecified roles</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pull_vessel_info_corrections</td>
+<td style="text-align: left;">Based on the information shown above, please indicate which information needs to be corrected or updated:</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">reg_no</td>
+<td style="text-align: left;">Vessel registration number</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vessel_name</td>
+<td style="text-align: left;">Vessel name</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hull_number</td>
+<td style="text-align: left;">Hull number</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vessel_class</td>
+<td style="text-align: left;">Vessel Class</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">vessel_type</td>
+<td style="text-align: left;">Vessel type</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vessel_type_specify</td>
+<td style="text-align: left;">Specify vessel type</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">operating_site_primary</td>
+<td style="text-align: left;">Primary operating site</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">operating_site_secondary</td>
+<td style="text-align: left;">Secondary operating site</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mooring_site</td>
+<td style="text-align: left;">Mooring site</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hull_material</td>
+<td style="text-align: left;">Hull material</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hull_material_specify</td>
+<td style="text-align: left;">Specify hull material</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dim_units</td>
+<td style="text-align: left;">Units of length used</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">input_inches_for_conversion</td>
+<td style="text-align: left;">Enter inches for conversion to decimal feet</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">calc_decimal_ft</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dim_length</td>
+<td style="text-align: left;">Length</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dim_beam</td>
+<td style="text-align: left;">Beam</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dim_depth_keel</td>
+<td style="text-align: left;">Keel depth</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dim_depth_overall</td>
+<td style="text-align: left;">Overall depth</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dim_draught</td>
+<td style="text-align: left;">Draught</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">next_species_yn</td>
+<td style="text-align: left;">2.2.1. Was fish or other species caught and or landed?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">next_expenses_yn</td>
+<td style="text-align: left;">2.2.2. Do you wish to record trip expenses?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fuel_ec</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fuel_gallons</td>
+<td style="text-align: left;">Fuel (gallons)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">oil_ec</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">oil_gallons</td>
+<td style="text-align: left;">Oil (quarts)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ice_ec</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ice_type</td>
+<td style="text-align: left;">Ice type</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ice_type_specify</td>
+<td style="text-align: left;">Specify ice type</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bait_ec</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">food_ec</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other_ec</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">other_label</td>
+<td style="text-align: left;">What items or services are the <strong>other</strong> costs?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">calc_fuel</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">calc_oil</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">calc_ice</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">calc_bait</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">calc_food</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">calc_other</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">calc_expenses</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">total_expenses_are_calc_expenses</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">boat_crew_qty</td>
+<td style="text-align: left;">Number of persons on boat</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">calc_total_fish_val</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">calc_profit</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sea_state</td>
+<td style="text-align: left;">Sea state</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sea_colour</td>
+<td style="text-align: left;">Sea colour</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comments</td>
+<td style="text-align: left;">Comments and observations</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">team_yn</td>
+<td style="text-align: left;">Are there other members in the data colletion team?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">collection_agent_002</td>
+<td style="text-align: left;">Name of data collector?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">agent_signature</td>
+<td style="text-align: left;">Signature of data collector</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">agent_signature_url</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">id</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">uuid</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">submission_time</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">validation_status</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">version</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tags</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">index</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
@@ -345,8 +696,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>A tutorial on project set-up and r4np is found here: <a href="https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html" class="uri">https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p><a href="https://www.kobotoolbox.org/" class="uri">https://www.kobotoolbox.org/</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p><a href="https://www.kobotoolbox.org/" class="uri">https://www.kobotoolbox.org/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

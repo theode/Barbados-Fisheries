@@ -1,17 +1,23 @@
 ---
 title: "Tutorial: Fish Catch and Effort Analysis and Reporting Using R"
 author: "Derrick Theophille"
+date: "2023-12-21"
 
 format: 
   html:
     toc: true
     number-sections: true
-    fig_caption: true
+    fig_cap: true
 ---
 
 # Introduction
 
-This tutorial intends to walk you through coding the retrieval, cleaning and manipulation, analysis and reporting of fish catch and effort data using R and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.
+This tutorial intends to walk you through coding the retrieval, cleaning, manipulation, analysis, and reporting of fish catch and effort data using the R Statistical Software and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.
+
+Just a few thinks to note as we progress:
+
+- Comments in the code are prefaced with a hash tag **"#"**.
+- The text, though handy, is meant to be accompanied by input from the lecturer. Everything may not be explained according to the needs of the student. So questions are encouraged.  
 
 ```{r}
 #| label: to-do
@@ -34,16 +40,20 @@ This tutorial intends to walk you through coding the retrieval, cleaning and man
 
 ### Folder structure
 
-This tutorial assumes that you use projects within RStudio. Added to that, it uses the following folder structure (automatically generated using the **"r4np"** package[^1]):
+This tutorial assumes that you use projects within RStudio. Added to that, it uses the following folder structure (automatically generated using the **"r4np"** package):
 
-[^1]: A tutorial on project set-up and r4np is found here: <https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html>
+::: {.callout-important}
+
+A tutorial on project set-up and r4np is found here (Chapter 6 from 6.1 to 6.2): <https://bookdown.org/daniel_dauber_io/r4np_book/starting-your-r-projects.html>
+
+:::
 
 ```{r}
 #| label: file-directory-structure
 #| echo: false
 
 
-d01 <- data.frame(folder_name = list.dirs(path = "..", full.names = FALSE, recursive = FALSE),
+d01 <- data.frame(folder_name = list.dirs(path = ".", full.names = FALSE, recursive = FALSE),
                   explanation = c("Github file",
                                   "R-project user file",
                                   "All raw data files are stored here",
@@ -81,24 +91,51 @@ library(tidyselect) # implements a specialised sublanguage of R for selecting va
 
 ## Accessing and downloading the data
 
-The data used in this tutorial is sourced from a KoboToolbox[^2] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. There are multiple methods of accessing data from KoboToolbox servers, however, we will be using the XLS download method in this tutorial. 
+The data used in this tutorial is sourced from a KoboToolbox[^1] project created to collect fish catch and effort data in Barbados, specifically the **"\[DRAFT\] Barbados Routine Fisheries Field Data Collection Form"**. There are multiple methods of accessing data from KoboToolbox servers, however, we will be using the XLS download method in this tutorial. 
 
-To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"DATA"** tab at the top.
+To access the data (assuming that you have a KoboToolbox account and was given access to the project) log in to your account, open the project and head to the **"DATA"** tab at the top. See @fig-kobo-data below.
 
-[^2]: <https://www.kobotoolbox.org/>
+[^1]: <https://www.kobotoolbox.org/>
 
-![*KoboToolbox data tab*](images/Screenshot%20KoboToolbox-data.png){fig-align="center"}
+![*KoboToolbox data tab*](images/Screenshot%20KoboToolbox-data.png){#fig-kobo-data}
 
-On the left side, select "Downloads". Pay attention to the settings shown and ensure that you have the same. Then when you are done, select **"EXPORT"**.
+On the left side (@fig-kobo-downloads), select "Downloads". Pay attention to the settings highlighted and ensure that you have the same. When you are done, select **"EXPORT"**.
 
-![*KoboToolbox downloads side-tab*](images/Screenshot%20KoboToolbox-downloads.png){fig-align="center"}
+![*KoboToolbox downloads side-tab*](images/Screenshot%20KoboToolbox-downloads.png){#fig-kobo-downloads}
 
-KoboToolbox generates an Excel (XLS) file. Click the **"Download"** button to get your file.
+KoboToolbox generates an Excel (XLS) file. Click the **"Download"** button to get your file (@fig-kobo-xls).
 
-![*KoboToolbox downloads XLS file with labels*](images/Screenshot%20KoboToolbox-downloads-02.png){fig-align="center"}
+![*KoboToolbox downloads XLS file with labels*](images/Screenshot%20KoboToolbox-downloads-02.png){#fig-kobo-xls}
 
 ## Importing data into R
-The data from the KoboToolbox server is stored in an Excel Workbook which has multiple sheets. Reminiscent of a database, the sheets are linked using a key variable, named the UUID. One sheet acts as the main table and is linked to several sub-tables in a one-to-one or one-to-many relationship.
+The data from the KoboToolbox server is stored in an Excel Workbook which has multiple sheets. Reminiscent of a database, the sheets are linked using a key variable, named the UUID. One sheet acts as the main table and is linked to several sub-tables in a one-to-one or one-to-many relationship. These are the collected data. But, before we begin looking at the actual data collected, we will import the reference tables.
+
+### Reference tables
+
+Reference tables store background information on the collected data. In this exercise, this includes the questionnaire and the look-up lists. The questionnaire gives added context to the variables found in the main and sub tables. The look-up lists help with decoding the choice options for those questions. Both will come in handy as we explore our data.
+
+::: {.callout-tip}
+
+The reference tables can be downloaded from the KoboToolbox project. 
+
+:::
+
+```{r}
+#| label: ref-tables
+#| message: false
+#| warning: false
+
+# questionnaire ----
+ref_questionnaire <- read_xlsx(here("00_raw_data", "questionnaire", "aD3ds4EVZTq8SfR9dYGqdJ.xlsx"),
+                               # Select the Excel sheet to load
+                               sheet = "survey") |> 
+  # We split the "type" variable into two
+  separate(col = type, into = c("type", "look_up"), sep = " ")
+
+# look-up-lists ----
+ref_look_ups <- read_xlsx(here("00_raw_data", "questionnaire", "aD3ds4EVZTq8SfR9dYGqdJ.xlsx"),
+                               sheet = "choices")
+```
 
 ### Main table
 
@@ -124,8 +161,14 @@ The resulting **main_table** variables are:
 #| label: vars-main-table
 #| echo: false
 
-names(main_table)
+d01 <- data.frame(variable_code = names(main_table)) |> 
+  left_join(ref_questionnaire[, c("name", "label")], by = c("variable_code" = "name")) |> 
+  mutate(across(label, ~str_replace_all(., "\\#", "")))
+
+kable(d01)
 
 # str(main_table)
 ```
+
+
 
