@@ -96,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#reference-tables" id="toc-reference-tables" class="nav-link" data-scroll-target="#reference-tables"><span class="header-section-number">2.2.1</span> Reference tables</a></li>
   <li><a href="#main-table" id="toc-main-table" class="nav-link" data-scroll-target="#main-table"><span class="header-section-number">2.2.2</span> Main table</a></li>
+  <li><a href="#sub-tables" id="toc-sub-tables" class="nav-link" data-scroll-target="#sub-tables"><span class="header-section-number">2.2.3</span> Sub tables</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -135,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>This tutorial intends to walk you through coding the retrieval, cleaning, manipulation, analysis, and reporting of fish catch and effort data using the R Statistical Software and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.</p>
-<p>Just a few thinks to note as we progress:</p>
+<p>Just a few things to note as we progress:</p>
 <ul>
 <li>Comments in the code are prefaced with a hash tag <strong>“#”</strong>.</li>
 <li>The text, though handy, is meant to be accompanied by input from the lecturer. Everything may not be explained according to the needs of the student. So questions are encouraged.</li>
@@ -283,7 +284,7 @@ Tip
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="main-table"><span class="header-section-number">2.2.2</span> Main table</h3>
 <p>The <strong>readxl()</strong> package will be used to import the data into R. We begin with the main table, called <strong>main_table</strong> in this tutorial.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>main_table <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>main_table_raw <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"_DRAFT_ Barbados Routine Fis..."</span>) <span class="sc">|&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
@@ -294,6 +295,19 @@ Tip
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The resulting <strong>main_table</strong> variables are:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>NA</strong> means that there is no label for the variable.</p>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
@@ -687,6 +701,37 @@ Tip
 </tbody>
 </table>
 </div>
+</div>
+</section>
+<section id="sub-tables" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="sub-tables"><span class="header-section-number">2.2.3</span> Sub tables</h3>
+<p>The Excel file downloaded from KoboToolbox also has a few sub tables. We will import these now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>catch_raw <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"grp_catch_landings"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make some minor edits to data in all variables: This "--" is converted to NA</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>crew_raw <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"grp_crew"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make some minor edits to data in all variables: This "--" is converted to NA</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bio_raw <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">"00_raw_data"</span>, <span class="st">"kobotoolbox"</span>, <span class="st">"DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"</span>),</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># Select which sheet to access and load</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sheet =</span> <span class="st">"rpt_bio_data"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean and standardize the variable names so they are R-friendly</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make some minor edits to data in all variables: This "--" is converted to NA</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">--"</span>, <span class="cn">NA</span>, .)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
