@@ -14,7 +14,7 @@ format:
 
 This tutorial intends to walk you through coding the retrieval, cleaning, manipulation, analysis, and reporting of fish catch and effort data using the R Statistical Software and selected packages. Each step will be detailed and outputs thereof displayed and explained for your understanding.
 
-Just a few thinks to note as we progress:
+Just a few things to note as we progress:
 
 - Comments in the code are prefaced with a hash tag **"#"**.
 - The text, though handy, is meant to be accompanied by input from the lecturer. Everything may not be explained according to the needs of the student. So questions are encouraged.  
@@ -142,9 +142,9 @@ ref_look_ups <- read_xlsx(here("00_raw_data", "questionnaire", "aD3ds4EVZTq8SfR9
 The **readxl()** package will be used to import the data into R. We begin with the main table, called **main_table** in this tutorial.
 
 ```{r}
-#| label: import-data
+#| label: import-main-table
 
-main_table <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"),
+main_table_raw <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"),
                        # Select which sheet to access and load
                        sheet = "_DRAFT_ Barbados Routine Fis...") |>
   # Clean and standardize the variable names so they are R-friendly
@@ -167,14 +167,51 @@ The resulting **main_table** variables are:
 #| label: vars-main-table
 #| echo: false
 
-d01 <- data.frame(variable_code = names(main_table)) |> 
+d01 <- data.frame(variable_code = names(main_table_raw)) |> 
   left_join(ref_questionnaire[, c("name", "label")], by = c("variable_code" = "name")) |> 
   mutate(across(label, ~str_replace_all(., "\\#", "")))
 
 kable(d01)
 
-# str(main_table)
+# str(main_table_raw)
 ```
 
+### Sub tables
 
+The Excel file downloaded from KoboToolbox also has a few sub tables. We will import these now.
 
+```{r}
+#| label: import-catch
+
+catch_raw <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"),
+                       # Select which sheet to access and load
+                       sheet = "grp_catch_landings") |>
+  # Clean and standardize the variable names so they are R-friendly
+  clean_names() |>
+  # Make some minor edits to data in all variables: This "--" is converted to NA
+  mutate(across(everything(), ~gsub("\\--", NA, .)))
+```
+
+```{r}
+#| label: import-crew
+
+crew_raw <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"),
+                       # Select which sheet to access and load
+                       sheet = "grp_crew") |>
+  # Clean and standardize the variable names so they are R-friendly
+  clean_names() |>
+  # Make some minor edits to data in all variables: This "--" is converted to NA
+  mutate(across(everything(), ~gsub("\\--", NA, .)))
+```
+
+```{r}
+#| label: import-bio
+
+bio_raw <- read_xlsx(here("00_raw_data", "kobotoolbox", "DRAFT_Barbados_Routine_Fisheries_Field_Data_Collection_Form_-_latest_version_-_False_-_2023-12-21-20-05-18.xlsx"),
+                       # Select which sheet to access and load
+                       sheet = "rpt_bio_data") |>
+  # Clean and standardize the variable names so they are R-friendly
+  clean_names() |>
+  # Make some minor edits to data in all variables: This "--" is converted to NA
+  mutate(across(everything(), ~gsub("\\--", NA, .)))
+```
